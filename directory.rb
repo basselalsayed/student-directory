@@ -26,4 +26,4 @@ end
 
 print_header
 print_names
-print_footer
+print_footer(students)
