@@ -22,11 +22,16 @@ end
 def print(names)
   puts "Would you like to print all students or by a specific letter?"
   selection = gets.capitalize.chomp!
-  if selection == "All" 
-    names.each_with_index { |student, i| puts "#{(i + 1)}. #{student[:name] } (#{student[:cohort]} cohort)" }
-  else
-    names.each_with_index { |student, i| puts "#{(i + 1)}. #{student[:name]} (#{student[:cohort]} cohort)" if student[:name][0] == selection }
-  end
+
+  names.each_with_index { |student, i| 
+    if student[:name].length < 12
+      if selection == "All" 
+        puts "#{(i + 1)}. #{student[:name] } (#{student[:cohort]} cohort)" 
+        elsif student[:name][0] == selection
+          puts "#{(i + 1)}. #{student[:name]} (#{student[:cohort]} cohort)" 
+      end
+    end
+  }
 end
 
 def print_footer(names)
