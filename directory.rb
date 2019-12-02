@@ -20,7 +20,13 @@ def print_header
 end
 
 def print(names)
-  names.each { |i| puts "#{ i[:name] } (#{ i[:cohort] } cohort)"  }
+  puts "Would you like to print all students or by a specific letter?"
+  selection = gets.capitalize.chomp!
+  if selection == "All" 
+    names.each_with_index { |student, i| puts "#{(i + 1)}. #{student[:name] } (#{student[:cohort]} cohort)" }
+  else
+    names.each_with_index { |student, i| puts "#{(i + 1)}. #{student[:name]} (#{student[:cohort]} cohort)" if student[:name][0] == selection }
+  end
 end
 
 def print_footer(names)
@@ -33,7 +39,7 @@ def input_students
   puts "To finish, just hit return twice"
 
   students = []
-  name = gets.chomp!
+  name = gets.capitalize.chomp!
   
   while !name.empty? do 
     students << { name: name, cohort: :november }
