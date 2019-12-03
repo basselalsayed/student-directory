@@ -1,6 +1,6 @@
 def print_header
   puts "The students of Villains Academy".center(50)
-  puts "-----------------------------------------".center(50)
+  puts "----------------------".center(50)
 end
 
 def print(names)
@@ -39,22 +39,31 @@ end
 
 def input
   students = []
-  puts "Please enter the names of the student"
+  puts "Please enter the names of the student:"
   puts "To finish, just hit return twice"
   name = gets.chomp!
     while !name.empty? do
-      puts "Please enter the hobbies (return twice to finish)"
+      puts "Please enter the hobbies (return twice to finish):"
       hobbies = []
       hobby = gets.chomp!
         while !hobby.empty? do
           hobbies << hobby.capitalize!
           hobby = gets.chomp!
         end
+      puts "Please enter a cohort (return twice for default: november):"
+      cohort = gets.chomp!
+      puts "You have entered: #{cohort}. If this is correct return twice, otherwise please re-enter: "
+      cohort_2 = gets.chomp!
+      if cohort_2.empty?
+        cohort = :november if cohort.empty?
+      else
+        cohort = cohort_2
+      end
       puts "Please enter country of birth"
       country = gets.chomp!
       puts "Please enter height"
       height = gets.chomp!
-      students << { name: name.capitalize!, cohort: :november, hobbies: hobbies, country: country.capitalize!, height: height }
+      students << { name: name.capitalize!, cohort: cohort.to_sym, hobbies: hobbies, country: country.capitalize!, height: height }
       puts "Please enter the names of the student"
       puts "To finish, just hit return twice"
       name = gets.chomp!
