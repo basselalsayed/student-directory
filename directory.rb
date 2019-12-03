@@ -6,7 +6,7 @@ end
 # if it is cohort, create an array of cohorts, and print the users if their hash value is cohort
 def print(names)
   puts "Would you like to group by cohort or sort by name?"
-  answer = gets.chomp!
+  answer = gets.strip!
   if answer == "cohort"
     grouped_by_cohort = Hash.new { |h, k| h[k] = [] }
     names.each { |person| grouped_by_cohort[person[:cohort]] << person }
@@ -25,7 +25,7 @@ def print(names)
     }}
   else
     puts "Would you like to print all students or by a specific letter?"
-    selection = gets.capitalize.chomp!
+    selection = gets.capitalize.strip!
     print_header
     i = 0
     until i == names.length
@@ -65,12 +65,12 @@ def input
   students = []
   puts "Please enter the names of the student:"
   puts "To finish, just hit return twice"
-  name = gets.chomp!
+  name = gets.strip!
     while !name.empty? do
       puts "Please enter a cohort (return twice for default: november):"
-      cohort = gets.chomp!
+      cohort = gets.strip!
       puts "You have entered: #{cohort}. If this is correct return twice, otherwise please re-enter: "
-      cohort_2 = gets.chomp!
+      cohort_2 = gets.strip!
       if cohort_2.empty?
         cohort = :november if cohort.empty?
       else
@@ -78,20 +78,20 @@ def input
       end
       puts "Please enter the hobbies (return twice to finish):"
       hobbies = []
-      hobby = gets.chomp!
+      hobby = gets.strip!
         while !hobby.empty? do
           hobbies << hobby.capitalize!
-          hobby = gets.chomp!
+          hobby = gets.strip!
         end
       
       puts "Please enter country of birth"
-      country = gets.chomp!
+      country = gets.strip!
       puts "Please enter height"
-      height = gets.chomp!
+      height = gets.strip!
       students << { name: name.capitalize!, cohort: cohort.to_sym, hobbies: hobbies, country: country.capitalize!, height: height }
       puts "Please enter the names of the student"
       puts "To finish, just hit return twice"
-      name = gets.chomp!
+      name = gets.strip!
     end
     students
 end
