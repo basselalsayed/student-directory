@@ -5,50 +5,52 @@ end
 # add functionality to choose whether grouping should be by cohort or name selection
 # if it is cohort, create an array of cohorts, and print the users if their hash value is cohort
 def print(names)
-  # cohorts = []
-  # names.each { |person| cohorts << person[:cohort] unless cohorts.include?(person[:cohort]) }
+  puts "Would you like to group by cohort or sort by name?"
+  answer = gets.chomp!
+  if answer == "cohort"
+    grouped_by_cohort = Hash.new { |h, k| h[k] = [] }
+    names.each { |person| grouped_by_cohort[person[:cohort]] << person }
+    puts grouped_by_cohort
+    print_header
+    c = 0
+    grouped_by_cohort.each_with_index { |(cohort, person), idx| 
 
-  grouped_by_cohort = Hash.new { |h, k| h[k] = [] }
-  names.each { |person| grouped_by_cohort[person[:cohort]] << person }
-  puts grouped_by_cohort
-  print_header
-  c = 0
-  grouped_by_cohort.each_with_index { |(cohort, person), idx| 
-    
-    person.each { |i| 
-    puts %{
-      #{(c + 1)}. #{i[:name]} (#{i[:cohort]} cohort)
-         Hobbies: #{i[:hobbies]} 
-         Country: #{i[:country]} 
-         Height: #{i[:height]} cm}.center(50)  
-    c += 1
-  }}
-#   puts "Would you like to print all students or by a specific letter?"
-#   selection = gets.capitalize.chomp!
-#   print_header
-#   i = 0
-#   until i == names.length
-#     if i == names.length 
-#       break
-#     else
-#       if grouped_by_cohort[i][:name].length < 12
-#         if selection != "All" 
-          # puts %{
-          # #{(i + 1)}. #{grouped_by_cohort[i][:name]} (#{grouped_by_cohort[i][:cohort]} cohort)
-          #   Hobbies: #{grouped_by_cohort[i][:hobbies]} 
-          #   Country: #{grouped_by_cohort[i][:country]} 
-          #   Height: #{grouped_by_cohort[i][:height]} cm}.center(50) if grouped_by_cohort[i][:name][0] == selection
-#         else
-#           puts %{
-#           #{(i + 1)}. #{grouped_by_cohort[i][:name]} (#{grouped_by_cohort[i][:cohort]} cohort)
-#              Hobbies: #{grouped_by_cohort[i][:hobbies]} 
-#              Country: #{grouped_by_cohort[i][:country]} 
-#              Height: #{grouped_by_cohort[i][:height]} cm}.center(50)
-#         end
-#         i += 1
-#       end
-#     end
-#   end
+      person.each { |i| 
+      puts %{
+        #{(c + 1)}. #{i[:name]} (#{i[:cohort]} cohort)
+           Hobbies: #{i[:hobbies]} 
+           Country: #{i[:country]} 
+           Height: #{i[:height]} cm}.center(50)  
+      c += 1
+    }}
+  else
+    puts "Would you like to print all students or by a specific letter?"
+    selection = gets.capitalize.chomp!
+    print_header
+    i = 0
+    until i == names.length
+      if i == names.length 
+        break
+      else
+        if names[i][:name].length < 12
+          if selection != "All" 
+            puts %{
+            #{(i + 1)}. #{names[i][:name]} (#{names[i][:cohort]} cohort)
+              Hobbies: #{names[i][:hobbies]} 
+              Country: #{names[i][:country]} 
+              Height: #{names[i][:height]} cm}.center(50) if names[i][:name][0] == selection
+          else
+            puts %{
+            #{(i + 1)}. #{names[i][:name]} (#{names[i][:cohort]} cohort)
+               Hobbies: #{names[i][:hobbies]} 
+               Country: #{names[i][:country]} 
+               Height: #{names[i][:height]} cm}.center(50)
+          end
+          i += 1
+        end
+      end
+    end
+  end
 end
 
 def print_footer(names)
