@@ -6,6 +6,7 @@ end
 def print(names)
   puts "Would you like to print all students or by a specific letter?"
   selection = gets.capitalize.chomp!
+
   i = 0
   until i == names.length
     if i == names.length 
@@ -13,9 +14,11 @@ def print(names)
     else
       if names[i][:name].length < 12
         if selection != "All" 
-          puts "#{(i + 1)}. #{names[i][:name]} (#{names[i][:cohort]} cohort)" if names[i][:name][0] == selection
+          puts "#{(i + 1)}. #{names[i][:name]} (#{names[i][:cohort]} cohort)
+          hobbies: #{names[i][:hobbies]} country: #{names[i][:country]} height: #{names[i][:height]}" if names[i][:name][0] == selection
         else
-          puts "#{(i + 1)}. #{names[i][:name] } (#{names[i][:cohort]} cohort)" 
+          puts "#{(i + 1)}. #{names[i][:name]} (#{names[i][:cohort]} cohort)
+          hobbies: #{names[i][:hobbies]} country: #{names[i][:country]} height: #{names[i][:height]}"
         end
         i += 1
       end
@@ -27,23 +30,34 @@ def print_footer(names)
   puts "Overall, we have #{ names.count } great students"
 end
 
-def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
 
+def input
   students = []
+  puts "Please enter the names of the student"
+  puts "To finish, just hit return twice"
   name = gets.chomp!
-  
-  while !name.empty? do 
-    students << { name: name.capitalize!, cohort: :november }
-    puts "Now we have #{ students.count } students"
-    name = gets.chomp!
-  end
-
-  students
+    while !name.empty? do
+      puts "Please enter the hobbies (return twice to finish)"
+      hobbies = []
+      hobby = gets.capitalize.chomp!
+        while !hobby.empty? do
+          hobbies << hobby
+          hobby = gets.chomp!
+        end
+      puts "Please enter country of birth"
+      country = gets.chomp!
+      puts "Please enter height"
+      height = gets.chomp!
+      students << { name: name.capitalize!, cohort: :november, hobbies: hobbies, country: country.capitalize!, height: height }
+      puts "Please enter the names of the student"
+      puts "To finish, just hit return twice"
+      name = gets.chomp!
+    end
+    students
 end
 
-students = input_students
+
+students = input
 print_header
 print(students)
 print_footer(students)
