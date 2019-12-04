@@ -5,6 +5,7 @@ end
 
 def print(names)
   if names.count == 0
+    puts "There are no students to print"
     nil
   else
     puts "Would you like to group by cohort or sort by name?"
@@ -12,19 +13,37 @@ def print(names)
     if answer == "cohort"
       grouped_by_cohort = Hash.new { |h, k| h[k] = [] }
       names.each { |person| grouped_by_cohort[person[:cohort]] << person }
-      puts grouped_by_cohort
-      print_header
-      c = 0
-      grouped_by_cohort.each_with_index { |(cohort, person), idx| 
+      puts "If you would like to see a specific cohort, enter the month below. Otherwise return twice to see all grouped"
+      choice = gets.chomp!
+      if choice.empty?
+        print_header
+        c = 0
+        grouped_by_cohort.each { |cohort, person| 
 
-        person.each { |i| 
-        puts %{
-          #{(c + 1)}. #{i[:name]} (#{i[:cohort]} cohort)
-             Hobbies: #{i[:hobbies]} 
-             Country: #{i[:country]} 
-             Height: #{i[:height]} cm}.center(50)  
-        c += 1
-      }}
+          person.each { |i| 
+          puts %{
+            #{(c + 1)}. #{i[:name]} (#{i[:cohort]} cohort)
+               Hobbies: #{i[:hobbies]} 
+               Country: #{i[:country]} 
+               Height: #{i[:height]} cm}.center(50)  
+          c += 1
+        }}
+      else
+        print_header
+        c = 0
+        grouped_by_cohort.each { |cohort, person| 
+          person.each { |i| 
+          puts %{
+            #{(c + 1)}. #{i[:name]} (#{i[:cohort]} cohort)
+               Hobbies: #{i[:hobbies]} 
+               Country: #{i[:country]} 
+               Height: #{i[:height]} cm}.center(50)  if i[:cohort] == choice.to_sym
+          c += 1
+        }}
+      end
+      
+
+
     else
       puts "Would you like to print all students or by a specific letter?"
       selection = gets.capitalize.strip!
@@ -102,6 +121,5 @@ end
 
 
 students = input
-# print_header
 print(students)
 print_footer(students)
