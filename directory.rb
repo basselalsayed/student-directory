@@ -132,6 +132,8 @@ def process(selection) #provides option for moving through the menu
      input_students
     when "2" #show the students
       show_students
+    when "3" #saves to csv file
+      save_students
     when "9"
       exit #terminates program
     else
@@ -145,5 +147,22 @@ def interactive_menu
     process(gets.chomp)
   end
 end
+
+def save_students
+  file = File.open("students.csv", "w") #open the file for writing
+  #iterate over the array of students and add each line to a new file
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobbies], student[:country], student[:height]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
+end
+
+
+
+
+
+
 
 interactive_menu
