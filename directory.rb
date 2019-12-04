@@ -118,6 +118,7 @@ end
 def print_menu #1. print the menu and ask the user what to do
   puts "1. Input the students" 
   puts "2. Show the students" 
+  puts "3. Save the list to students.csv"
   puts "9. Exit"
 end
 
