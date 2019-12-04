@@ -119,6 +119,7 @@ def print_menu #1. print the menu and ask the user what to do
   puts "1. Input the students" 
   puts "2. Show the students" 
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit"
 end
 
@@ -133,8 +134,10 @@ def process(selection) #provides option for moving through the menu
      input_students
     when "2" #show the students
       show_students
-    when "3" #saves to csv file
+    when "3" #saves to students.csv file
       save_students
+    when "4"
+      load_students #loads students.csv
     when "9"
       exit #terminates program
     else
@@ -153,14 +156,21 @@ def save_students
   file = File.open("students.csv", "w") #open the file for writing
   #iterate over the array of students and add each line to a new file
   @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobbies], student[:country], student[:height]]
+    student_data = [student[:name], student[:cohort], student[:hobbies].join('-'), student[:country], student[:height]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
   file.close
 end
 
-
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort, hobbies, country, height = line.chomp.split(',')
+      @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies.split('-'), country: country, height: height }
+  end
+  file.close
+end
 
 
 
