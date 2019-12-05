@@ -137,6 +137,7 @@ def process(selection) #provides option for moving through the menu
     when "3" #saves to students.csv file
       save_students
     when "4"
+      @students = []
       load_students #loads students.csv
     when "9"
       exit #terminates program
@@ -167,14 +168,13 @@ end
 
 def try_load_students
   filename = ARGV.first
-  unless ARGV.first.nil? || File.exist?(filename) #short circuit evaluation
+  if ARGV.first.nil? || !File.exist?(filename) #short circuit evaluation
     filename = "students.csv"
   end
   load_students(filename)
   puts "File not found or no filename given"
   puts "Loaded #{@students.count} from #{filename}"
 end
-
 
 def interactive_menu
   loop do
