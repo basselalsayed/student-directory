@@ -155,6 +155,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Students saved to students.csv"
 end
 
 def load_students(filename = "students.csv")
@@ -164,6 +165,7 @@ def load_students(filename = "students.csv")
       @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies.split('-'), country: country, height: height }
   end
   file.close
+  puts "Successfully loaded students from #{filename}"
 end
 
 def try_load_students
