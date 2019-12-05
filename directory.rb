@@ -11,12 +11,12 @@ def print_students_list
     nil
   else
     puts "Would you like to group by cohort or sort by name?"
-    answer = gets.strip!
+    answer = STDIN.gets.strip!
     if answer == "cohort"
       grouped_by_cohort = Hash.new { |h, k| h[k] = [] }
       @students.each { |person| grouped_by_cohort[person[:cohort]] << person }
       puts "If you would like to see a specific cohort, enter the month below. Otherwise return twice to see all grouped"
-      choice = gets.chomp!
+      choice = STDIN.gets.chomp!
       if choice.empty?
         print_header
         c = 0
@@ -45,7 +45,7 @@ def print_students_list
 
     else
       puts "Would you like to print all students or by a specific letter?"
-      selection = gets.capitalize.strip!
+      selection = STDIN.gets.capitalize.strip!
       print_header
       i = 0
       until i == @students.length
@@ -85,12 +85,12 @@ end
 def input_students
   puts "Please enter the names of the student:"
   puts "To finish, just hit return twice"
-  name = gets.strip!
+  name = STDIN.gets.strip!
     while !name.empty? do
       puts "Please enter a cohort (return twice for default: november):"
-      cohort = gets.strip!
+      cohort = STDIN.gets.strip!
       puts "You have entered: #{cohort}. If this is correct return twice, otherwise please re-enter: "
-      cohort_2 = gets.strip!
+      cohort_2 = STDIN.gets.strip!
         if cohort_2.empty?
           cohort = :november if cohort.empty?
         else
@@ -98,20 +98,20 @@ def input_students
         end
       puts "Please enter the hobbies (return twice to finish):"
       hobbies = []
-      hobby = gets.strip!
+      hobby = STDIN.gets.strip!
         while !hobby.empty? do
           hobbies << hobby.capitalize!
-          hobby = gets.strip!
+          hobby = STDIN.gets.strip!
         end
       puts "Please enter country of birth"
-      country = gets.strip!
+      country = STDIN.gets.strip!
       puts "Please enter height"
-      height = gets.strip!
+      height = STDIN.gets.strip!
       @students << { name: name.capitalize!, cohort: cohort.to_sym, hobbies: hobbies, country: country.capitalize!, height: height }
       puts "Now we have #{@students.count} students"
       puts "Please enter the names of the student"
       puts "To finish, just hit return twice"
-      name = gets.strip!
+      name = STDIN.gets.strip!
     end
 end
 
@@ -145,13 +145,6 @@ def process(selection) #provides option for moving through the menu
   end
 end
 
-def interactive_menu
-  loop do
-    print_menu
-    process(gets.chomp)
-  end
-end
-
 def save_students
   file = File.open("students.csv", "w") #open the file for writing
   #iterate over the array of students and add each line to a new file
@@ -163,8 +156,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, hobbies, country, height = line.chomp.split(',')
       @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies.split('-'), country: country, height: height }
@@ -172,8 +165,23 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first
+  unless ARGV.first.nil? || File.exist?(filename) #short circuit evaluation
+    filename = "students.csv"
+  end
+  load_students(filename)
+  puts "File not found or no filename given"
+  puts "Loaded #{@students.count} from #{filename}"
+end
 
 
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
 
-
+try_load_students
 interactive_menu
