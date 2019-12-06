@@ -118,8 +118,8 @@ end
 def print_menu #1. print the menu and ask the user what to do
   puts "1. Input the students" 
   puts "2. Show the students" 
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a file"
+  puts "4. Load the list from a file"
   puts "9. Exit"
 end
 
@@ -138,7 +138,9 @@ def process(selection) #provides option for moving through the menu
       save_students
     when "4"
       @students = []
-      load_students #loads students.csv
+      puts "Enter the name of the file to load\nReturn twice to use students.csv (default)"
+      filename = filename_choice
+      load_students(filename) #loads students.csv
     when "9"
       exit #terminates program
     else
@@ -146,26 +148,49 @@ def process(selection) #provides option for moving through the menu
   end
 end
 
+# def save_students
+#  puts "Enter the name of the file to save\nReturn twice to use students.csv (default)"
+#   filename = filename_choice
+#   file = File.open(filename, "w") #open the file for writing
+#   #iterate over the array of students and add each line to a new file
+#   @students.each do |student|
+#     student_data = [student[:name], student[:cohort], student[:hobbies].join('-'), student[:country], student[:height]]
+#     csv_line = student_data.join(",")
+#     file.puts csv_line
+#   end
+#   file.close
+#   puts "Students saved to students.csv"
+# end
+
 def save_students
-  file = File.open("students.csv", "w") #open the file for writing
+  puts "Enter the name of the file to save\nReturn twice to use students.csv (default)"
+  filename = filename_choice
+  File.open(filename, "w") do |file| #open the file for writing
   #iterate over the array of students and add each line to a new file
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:hobbies].join('-'), student[:country], student[:height]]
     csv_line = student_data.join(",")
-    file.puts csv_line
+    file.puts csv_line 
   end
-  file.close
-  puts "Students saved to students.csv"
+  end
+    puts "Students saved to students.csv"
+  end
+
+def filename_choice
+  filename_choice = STDIN.gets.chomp
+  filename_choice == "" ? "students.csv" : filename_choice
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
+  if File.exist?(filename)
+  File.open(filename, "r") do |file|
   file.readlines.each do |line|
     name, cohort, hobbies, country, height = line.chomp.split(',')
       @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies.split('-'), country: country, height: height }
   end
-  file.close
+end
   puts "Successfully loaded students from #{filename}"
+end
 end
 
 def try_load_students
