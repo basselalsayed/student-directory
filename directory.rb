@@ -1,3 +1,4 @@
+require 'csv'
 @students = [] #an empty array accessible to all methods
 
 def print_header
@@ -130,51 +131,52 @@ end
 
 def process(selection) #provides option for moving through the menu
   case selection
-    when "1" #input students
+    when "1" 
      input_students
-    when "2" #show the students
+    when "2" 
       show_students
-    when "3" #saves to students.csv file
+    when "3" 
       save_students
     when "4"
       @students = []
       puts "Enter the name of the file to load\nReturn twice to use students.csv (default)"
       filename = filename_choice
       load_students(filename) #loads students.csv
+      puts "Successfully loaded students from #{filename}"
     when "9"
-      exit #terminates program
+      exit 
     else
       puts "I don't know what you meant, try again"
   end
 end
 
 # def save_students
-#  puts "Enter the name of the file to save\nReturn twice to use students.csv (default)"
+#   puts "Enter the name of the file to save\nReturn twice to use students.csv (default)"
 #   filename = filename_choice
-#   file = File.open(filename, "w") #open the file for writing
+#   File.open(filename, "w") do |file| #open the file for writing
 #   #iterate over the array of students and add each line to a new file
 #   @students.each do |student|
 #     student_data = [student[:name], student[:cohort], student[:hobbies].join('-'), student[:country], student[:height]]
 #     csv_line = student_data.join(",")
-#     file.puts csv_line
+#     file.puts csv_line 
 #   end
-#   file.close
-#   puts "Students saved to students.csv"
+#   end
+#     puts "Students saved to students.csv"
 # end
 
 def save_students
   puts "Enter the name of the file to save\nReturn twice to use students.csv (default)"
   filename = filename_choice
-  File.open(filename, "w") do |file| #open the file for writing
-  #iterate over the array of students and add each line to a new file
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobbies].join('-'), student[:country], student[:height]]
-    csv_line = student_data.join(",")
-    file.puts csv_line 
+  header_row = @students[0].each_with_object([]) { |(k, v), arr | arr << k.to_s.capitalize }
+  header = CSV.open("#{filename}", 'r') { |csv| csv.first }
+  CSV.open("./#{filename}", "w") do |csv|
+    csv << header_row if header != header_row
+    @students.each { |student| 
+      csv << [student[:name], student[:cohort].to_s.capitalize, student[:hobbies].join('-'), student[:country], student[:height]]    
+    }
   end
-  end
-    puts "Students saved to students.csv"
-  end
+  puts "Students saved to #{filename}"
+end
 
 def filename_choice
   filename_choice = STDIN.gets.chomp
@@ -182,25 +184,22 @@ def filename_choice
 end
 
 def load_students(filename = "students.csv")
-  if File.exist?(filename)
-  File.open(filename, "r") do |file|
-  file.readlines.each do |line|
-    name, cohort, hobbies, country, height = line.chomp.split(',')
-      @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies.split('-'), country: country, height: height }
+ CSV.foreach("./#{filename}") do |row|
+    name, cohort, hobbies, country, height = row
+   @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies.split('-'), country: country, height: height }
   end
+  puts "Loaded #{@students.count} from #{filename}"
 end
-  puts "Successfully loaded students from #{filename}"
-end
-end
+
 
 def try_load_students
   filename = ARGV.first
   if ARGV.first.nil? || !File.exist?(filename) #short circuit evaluation
     filename = "students.csv"
   end
-  load_students(filename)
   puts "File not found or no filename given"
-  puts "Loaded #{@students.count} from #{filename}"
+  load_students(filename)
+  
 end
 
 def interactive_menu
